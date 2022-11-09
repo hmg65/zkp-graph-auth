@@ -7,6 +7,72 @@ import Axios from "axios";
 function Signup() {
 
     const handleRegister = (values) => {
+
+        var shasum = crypto.createHash('sha1').update(JSON.stringify(values.password)).digest('hex');
+
+        console.log(shasum);
+        
+        function toHex(shasum) {
+          var result = '';
+          for (var i=0; i<shasum.length; i++) {
+            result += shasum.charCodeAt(i).toString(16);
+          }
+          return result;
+        }
+        
+        var shahex = toHex(shasum);
+        
+        function factorialize(num) {
+          if (num < 0) 
+                return -1;
+          else if (num == 0) 
+              return 1;
+          else {
+              return (num * factorialize(num - 1));
+          }
+        }
+        
+        function GreatestFactorial(shahex){
+          
+          for(var i=0; i< 200; i++){
+            var fact = factorialize(i);
+            if(fact > shahex){
+              console.log(fact);
+              return fact;
+            }
+          }
+        }
+        
+        
+        
+        function convert(shahex){
+        
+          var i =0;
+          var factor =0;
+        
+          var a = new Array();
+        
+          while(shahex>0){
+        factor = GreatestFactorial(shahex);
+        
+        /* global BigInt */
+        a[i] =  BigInt(shahex/factor);
+        shahex = shahex - (a[i] * factor);
+        console.log(shahex);
+        i = i + 1 ;
+          }
+        console.log(a[1]);
+        return a;
+        }
+        
+        var after_convert = convert(shahex); 
+        
+        
+        
+        //console.log(after_convert);
+
+
+
         Axios.post("http://localhost:3001/register", {
           email: values.email,
           password: values.password,
