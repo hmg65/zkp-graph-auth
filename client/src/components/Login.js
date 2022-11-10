@@ -7,6 +7,11 @@ import { useState } from "react";
 import crypto from "crypto";
 
 function Login() {
+
+    // states for authentication
+
+    const [auth, setAuth] = useState(null);
+    const [showAuth, setShowAuth] = useState(false);
     
     const [g1_str, setg1_str] = useState("");
     var v =0;
@@ -48,13 +53,24 @@ function fetch_gn(values){
 
 function verify(values){
 
+
     Axios.post("http://localhost:3001/verify", {
         email: values.email,
               v: v,
               r: r,
             }).then((response) => {
                 console.log(response.data.verdict);
-            
+
+                setShowAuth(true);
+
+                if(response.data.verdict == "true")
+                {
+                    setAuth(true);
+                }
+                else
+                {
+                    setAuth(false);
+                }
             }); 
 
 }
@@ -187,6 +203,10 @@ verify(values);
                 <button className="button" type="submit">
                     Sign in
                 </button>
+
+                { !showAuth ? <span></span> :
+                auth ? <span className="ms-2 text-success fw-bold">Authentication Successful</span> : <span className="ms-2 text-danger fw-bold">Authentication Failed</span>
+                }
 
                 <div className="d-flex flex-row">
 
