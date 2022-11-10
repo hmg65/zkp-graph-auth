@@ -1,9 +1,5 @@
 # zkp - graph - auth
 
-<p align="center">
-  <img src="client/src/assets/to_readme/LoginAndRegisterGif.gif" width="600px">
-</p>
-
 ## Installation
 
 ### Client

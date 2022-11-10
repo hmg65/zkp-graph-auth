@@ -2,16 +2,18 @@ import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { ErrorMessage, Formik, Form, Field } from "formik";
 import Axios from "axios";
+import crypto from "crypto";
 
 
 function Signup() {
 
     const handleRegister = (values) => {
 
-        var shasum = crypto.createHash('sha1').update(JSON.stringify(values.password)).digest('hex');
+    var shasum = crypto.createHash('sha1').update(JSON.stringify(values.password)).digest('hex');
 
         console.log(shasum);
         
+        // SHA to HexaDecimal
         function toHex(shasum) {
           var result = '';
           for (var i=0; i<shasum.length; i++) {
@@ -20,8 +22,51 @@ function Signup() {
           return result;
         }
         
+        // stored hex here
         var shahex = toHex(shasum);
+
+        console.log(shahex);
+
+         var permutation = new Array();
+        for(var i = 0;i<shahex.length-1;i++){
+            
+            permutation[i] = shahex[i] + "" + shahex[i+1];         
+}
+
+// permuation pie
+var arrayOfPermutation = permutation.map(Number);
+console.log(arrayOfPermutation);
+
+// generate a random G1
+
+var G1 = Array.from({length: 79}, () => Math.floor(Math.random() * 79));
+console.log(G1);
+
+// calculate G2
+ var G2 = new Array() ;
+ for (let i = 0; i < Math.min(arrayOfPermutation.length, G1.length); i++) {
+    G2[i] = arrayOfPermutation[i] * G1[i];
+ }
+ console.log(G2);
+
+function arrayToNumber(arr){
+var result = arr[0];
+
+for(var i = 1; i<arr.length;i++){
+    result = result + "," + arr[i];
+}
+
+return result;
+}
+
+ var G1_number = arrayToNumber(G1);
+ var G2_number = arrayToNumber(G2);
+
+console.log(G1_number);
+
+
         
+        // for finding factorial
         function factorialize(num) {
           if (num < 0) 
                 return -1;
@@ -32,6 +77,7 @@ function Signup() {
           }
         }
         
+        // for greatest factorial
         function GreatestFactorial(shahex){
           
           for(var i=0; i< 200; i++){
@@ -44,7 +90,7 @@ function Signup() {
         }
         
         
-        
+        // convert function
         function convert(shahex){
         
           var i =0;
@@ -55,8 +101,8 @@ function Signup() {
           while(shahex>0){
         factor = GreatestFactorial(shahex);
         
-        /* global BigInt */
-        a[i] =  BigInt(shahex/factor);
+        
+        a[i] = (shahex/factor);
         shahex = shahex - (a[i] * factor);
         console.log(shahex);
         i = i + 1 ;
@@ -64,18 +110,13 @@ function Signup() {
         console.log(a[1]);
         return a;
         }
-        
-        var after_convert = convert(shahex); 
-        
-        
-        
-        //console.log(after_convert);
-
-
+    
 
         Axios.post("http://localhost:3001/register", {
           email: values.email,
-          password: values.password,
+          g1: G1_number,
+          g2: G2_number
+         
         }).then((response) => {
           alert(response.data.msg);
           console.log(response);
@@ -165,7 +206,7 @@ function Signup() {
                             <h5 className="card-title">New User Registration</h5>
                             <input className="form-control" type="email" placeholder="Username" aria-label="username"></input>
                             <input className="form-control mt-2" type="text" placeholder="Password" aria-label="password"></input>
-                            <button type="button" class="btn btn-primary mt-4 me-2">Register</button>
+                            <button type="button" onClick={handleRegister} class="btn btn-primary mt-4 me-2">Register</button>
                             <Link to="/login"> <button type="button" className="btn btn-primary mt-4">Home Page</button> </Link>
                         </div>
                     </div>

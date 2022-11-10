@@ -2,16 +2,102 @@ import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { ErrorMessage, Formik, Form, Field } from "formik";
 import Axios from "axios";
+import React from "react";
+import { useState } from "react";
 
 function Login() {
+    
 
-    const handleLogin = (values) => {
-        Axios.post("http://localhost:3001/login", {
+    
+    const [g1_str, setg1_str] = useState();
+    const [v, setV] = useState();
+
+
+
+    const HandleLogin = async (values) => {
+
+        Axios.post("http://localhost:3001/g1", {
+            email: values.email
+          }).then((response) => {
+             setg1_str(response.data[0].g1);
+            
+          }); 
+    
+        /*var api_url = `http://localhost:3001/t`;
+        var response = await fetch(api_url);
+        var json = await response.json();
+        var t = json;*/
+        
+        var gen_per = [];
+
+
+
+    gen_per = Array.from({length: 79}, () => Math.floor(Math.random() * 79));
+            
+        
+
+        //console.log(gen_per);
+ var g1_stored = new Array();
+g1_stored = g1_str.split(',');
+
+
+var GN = new Array() ;
+ for (let i = 0; i < Math.min(gen_per.length, g1_stored.length); i++) {
+    GN[i] = g1_stored[i] * gen_per[i];
+ }
+
+ function arrayToNumber(arr){
+    var result = arr[0];
+    
+    for(var i = 1; i<arr.length;i++){
+        result = result + "," + arr[i];
+    }
+    
+    return result;
+    }
+
+    var GN_number = arrayToNumber(GN);
+      
+    Axios.post("http://localhost:3001/update_gn", {
+        email: values.email,
+        gn: GN_number
+    
+      }).then((response) => {
+         setV(response.data);
+      });
+
+
+    var r = [];
+      if(v == 0 ){
+r = gen_per;
+      }
+else{
+
+    for (let i = 0; i < Math.min(gen_per.length, g1_stored.length); i++) {
+        r[i] = gen_per[i] / g1_stored[i];
+     }
+
+
+}
+
+ Axios.post("http://localhost:3001/verify", {
+    email: values.email,
+          v: v,
+          r: r,
+        }).then((response) => {
+            console.log(response.data.verdict);
+        
+        }); 
+       
+
+
+
+      /*  Axios.post("http://localhost:3001/login", {
           email: values.email,
           password: values.password,
         }).then((response) => {
           alert(response.data.msg);
-        });
+        }); */
       };
 
       const validationsLogin = yup.object().shape({
@@ -40,7 +126,7 @@ function Login() {
 
             <Formik
                 initialValues={{}}
-                onSubmit={handleLogin}
+                onSubmit={HandleLogin}
                 validationSchema={validationsLogin}
             >
                 <Form className="login-form">
