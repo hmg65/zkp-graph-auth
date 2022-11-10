@@ -11,14 +11,14 @@ function App() {
     <Routes>
       
       <Route
-        path="/"
+        path="/zkp"
         element={
-          <Signup />
+          <ZKP />
         }
       />
 
       <Route
-        path="/login"
+        path="/"
         element={
           <Login />
         }

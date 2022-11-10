@@ -1,10 +1,33 @@
 import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { ErrorMessage, Formik, Form, Field } from "formik";
+import Axios from "axios";
 
 function ZKP() {
 
+    const handleLogin = (values) => {
+        Axios.post("http://localhost:3001/login", {
+          email: values.email,
+          password: values.password,
+        }).then((response) => {
+          alert(response.data.msg);
+        });
+      };
+
+      const validationsLogin = yup.object().shape({
+        email: yup
+          .string()
+          .email("email inválido")
+          .required("O email é obrigatório"),
+        password: yup
+          .string()
+          .min(8, "A senha deve ter pelo menos 8 caracteres")
+          .required("A senha é obrigatória"),
+      });
+
     return(
         <div className="container-sm mt-4">
-            <div className="container-sm mt-4">
+            <div className="container-sm mt-4 ps-0">
                 <div className="card bg-light">
                     <div className="card-body text-left">
                         <h2 className="px-4">Authentication</h2>
@@ -13,22 +36,43 @@ function ZKP() {
                 </div>
             </div>
 
+            <Formik
+                initialValues={{}}
+                onSubmit={handleLogin}
+                validationSchema={validationsLogin}
+            >
+                <Form className="zkp-form">
+                <div className="zkp-form-group">
+                    <Field name="email" className="form-field" placeholder="Email" />
 
-            <div className="row mt-4">
-                <div className="col-sm-6">
-                    <div className="card border-0">
-                        <div className="card-body">
-                            <h5 className="card-title">Initiate Zero Knowledge Proof</h5>
-                            <input className="form-control" type="email" placeholder="Username" aria-label="username"></input>
-                            <input className="form-control mt-2" type="text" placeholder="Password" aria-label="password"></input>
-                            <button type="button" className="btn btn-primary mt-4 me-2">Get Token</button>
-                            <Link to ="/login"> <button type="button" className="btn btn-primary mt-4">Home Page</button> </Link>
-                        </div>
-                    </div>
+                    <ErrorMessage
+                    component="span"
+                    name="email"
+                    className="form-error"
+                    />
                 </div>
-            </div>
+                {/*Outro campo*/}
+                <div className="form-group">
+                    <Field name="password" className="form-field" placeholder="Password" />
 
+                    <ErrorMessage
+                    component="span"
+                    name="password"
+                    className="form-error"
+                    />
+                </div>
 
+                <button className="button" type="submit">
+                    Get Token
+                </button>
+
+                <Link to="/">
+                    <button className="button ms-4">
+                        Home Page
+                    </button>
+                </Link>
+                </Form>
+            </Formik>
         </div>
     )
 }

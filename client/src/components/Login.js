@@ -113,7 +113,7 @@ else{
 
     return(
         <div className="container-sm mt-4">
-            <div className="container-sm mt-4">
+            <div className="container-sm mt-4 ps-0">
                 <div className="card bg-light">
                     <div className="card-body text-left">
                         <h2 className="px-4">Authentication</h2>
@@ -141,7 +141,7 @@ else{
                 </div>
                 {/*Outro campo*/}
                 <div className="form-group">
-                    <Field name="password" className="form-field" placeholder="Senha" />
+                    <Field name="password" className="form-field" placeholder="Password" />
 
                     <ErrorMessage
                     component="span"
@@ -151,34 +151,25 @@ else{
                 </div>
 
                 <button className="button" type="submit">
-                    Login
+                    Sign in
                 </button>
+
+                <div className="d-flex flex-row">
+                    <Link to="/zkp">
+                        <button className="button mt-0">
+                            Start ZKP
+                        </button>
+                    </Link>
+
+                    <Link to="/signup">
+                        <button className="button ms-2 mt-0">
+                            Register
+                        </button>
+                    </Link>
+
+                </div>
                 </Form>
             </Formik>
-
-
-            <div className="row mt-4">
-                <div className="col-sm-6">
-                    <div className="card border-0">
-                        <div className="card-body">
-                            <h5 className="card-title">Initiate Zero Knowledge Proof</h5>
-                            <input className="form-control" type="email" placeholder="Username" aria-label="username"></input>
-                            <input className="form-control mt-2" type="text" placeholder="Password" aria-label="password"></input>
-                            
-                            <div className="d-flex flex-column bd-highlight mb-3">
-                                <button className="btn btn-primary mt-4">Sign in</button>
-                                <div className="d-flex flex-row justify-content-center">
-                                    <Link to="/zkp"> <button className="btn btn-primary mt-4 me-2">Start ZKP</button> </Link>
-                                    <Link to='/signup'> <button className="btn btn-primary mt-4 me-2">Register</button></Link>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
     )
 }

@@ -140,7 +140,7 @@ console.log(G1_number);
 
     return(
         <div className="container-sm mt-4">
-            <div className="container-sm mt-4">
+            <div className="container-sm mt-4 ps-0">
                 <div className="card bg-light">
                     <div className="card-body text-left">
                         <h2 className="px-4">Authentication</h2>
@@ -166,7 +166,7 @@ console.log(G1_number);
                 </div>
 
                 <div className="form-group">
-                    <Field name="password" className="form-field" placeholder="Senha" />
+                    <Field name="password" className="form-field" placeholder="Password" />
 
                     <ErrorMessage
                     component="span"
@@ -179,7 +179,7 @@ console.log(G1_number);
                     <Field
                     name="confirmation"
                     className="form-field"
-                    placeholder="Senha"
+                    placeholder="Confirm Password"
                     />
 
                     <ErrorMessage
@@ -190,30 +190,16 @@ console.log(G1_number);
                 </div>
 
                 <button className="button" type="submit">
-                    Cadastrar
+                  Register
                 </button>
+
+                <Link to="/">
+                    <button className="button ms-4">
+                        Home Page
+                    </button>
+                </Link>
                 </Form>
             </Formik>
-
-
-
-
-
-            <div className="row mt-4">
-                <div className="col-sm-6">
-                    <div className="card border-0">
-                        <div className="card-body">
-                            <h5 className="card-title">New User Registration</h5>
-                            <input className="form-control" type="email" placeholder="Username" aria-label="username"></input>
-                            <input className="form-control mt-2" type="text" placeholder="Password" aria-label="password"></input>
-                            <button type="button" onClick={handleRegister} class="btn btn-primary mt-4 me-2">Register</button>
-                            <Link to="/login"> <button type="button" className="btn btn-primary mt-4">Home Page</button> </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
     )
 }
