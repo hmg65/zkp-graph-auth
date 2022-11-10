@@ -4,6 +4,7 @@ const mysql = require("mysql");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 
+
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
@@ -28,72 +29,90 @@ app.post("/g1", (req, res) => {
 
 });
 
-app.post("/update_gn", (req, res) => {
-  const email = req.body.email;
-const gn = req.body.gn;
-  db.query("UPDATE users SET GN = ? WHERE email = ?", [gn,email], (err, result) => {
-    let x  = Math.floor(Math.random() + 0.5);
-    res.json(x);
+
+  app.post("/update_gn", (req, res) => {
+    const email = req.body.email;
+  const gn = req.body.gn;
+  console.log("hello");
+    db.query("UPDATE users SET GN = ? WHERE email = ?", [gn,email], (err, result) => {
+      let x  = Math.floor(Math.random() + 0.5);
+      console.log("hello");
+      res.json(x);
+    });
   });
-});
-
-
-app.post("/verify", (req, res) => {
-  const email = req.body.email;
-  const v = req.body.v;
-const r = req.body.r;
-
-console.log(r);
-  db.query("SELECT * FROM userdb.users WHERE email =  '" + email + "' ", (err, result,fields) => {
-
-    var gn_str = result[0].gn;
-    var g1_str = result[0].g1;
-    var g2_str = result[0].g2;
-      
-    var g1_stored = new Array();
-g1_stored = g1_str.split(',');
-var g2_stored = new Array();
-g2_stored = g2_str.split(',');
-var gn_stored = new Array();
-gn_stored = gn_str.split(',');
-
-
-
-    if(v==0){
-
-var final = [];
-
-for (let i = 0; i < Math.min(r.length, g1_stored.length); i++) {
-  final[i] = r[i] * g1_stored[i];
-}
-
-console.log(JSON.stringify(final));
-console.log(JSON.stringify(gn_stored));
-
-if(JSON.stringify(final)==JSON.stringify(gn_stored)){
-  res.send({ verdict: 'true' });
-}else{
-
-  res.send({ verdict: 'false' });
-}
-
-    }else{
-      
+  
+  app.post("/verify", (req, res) => {
+    const email = req.body.email;
+    const v = 0;
+  const r = req.body.r;
+  
+  console.log("how are yoy");
+  console.log(v);
+  console.log(r);
+  
+    db.query("SELECT * FROM userdb.users WHERE email = ? ",[email], (err, result) => {
+  
       var final = [];
+  
+      var gn_str = result[0].gn;
+      var g1_str = result[0].g1;
+      var g2_str = result[0].g2;
+        
+      var g1_stored = new Array();
+  g1_stored = g1_str.split(',');
+  var g2_stored = new Array();
+  g2_stored = g2_str.split(',');
+  var gn_stored = new Array();
+  gn_stored = gn_str.split(',');
+  
+  for (var i = 0; i <  gn_stored.length; i++) {
+    gn_stored[i] = 1 * gn_stored[i];
+  }
+  
+  
+      if(v==0){
 
-      for (let i = 0; i < Math.min(r.length, g2_stored.length); i++) {
-        final[i] = r[i] * g2_stored[i];
-      }
-      if(JSON.stringify(final)==JSON.stringify(gn_stored)){
-        res.send({ verdict: 'true' });
+        for (var i = 0; i < Math.min(r.length, g1_stored.length); i++) {
+          final[i] = r[i] * g1_stored[i];
+        }
+
+  console.log(JSON.stringify(final));
+  console.log(JSON.stringify(gn_stored));
+  
+  if(JSON.stringify(final)==JSON.stringify(gn_stored)){
+    res.send({ verdict: 'true' });
+  }else{
+  
+    res.send({ verdict: 'false' });
+  }
+  
       }else{
-        res.send({ verdict: 'false' });
-      }
 
-    }
- 
+        for (var i = 0; i < Math.min(r.length, g2_stored.length); i++) {
+          final[i] = parseInt(r[i] * g2_stored[i]);
+        }        
+
+        console.log(JSON.stringify(final));
+  console.log(JSON.stringify(gn_stored));
+  
+        
+        if(JSON.stringify(final)==JSON.stringify(gn_stored)){
+          res.send({ verdict: 'true' });
+        }else{
+          res.send({ verdict: 'false' });
+        }
+  
+      }
+  
+  
+    });
   });
-});
+
+
+
+
+
+
 
 app.post("/register", (req, res) => {
   const email = req.body.email;

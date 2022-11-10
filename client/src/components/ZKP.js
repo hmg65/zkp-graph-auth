@@ -17,12 +17,12 @@ function ZKP() {
       const validationsLogin = yup.object().shape({
         email: yup
           .string()
-          .email("email inválido")
-          .required("O email é obrigatório"),
+          .email("invalid email.")
+          .required("Email is mandatory."),
         password: yup
           .string()
-          .min(8, "A senha deve ter pelo menos 8 caracteres")
-          .required("A senha é obrigatória"),
+          .min(8, "Password must be at least 8 characters long.")
+          .required("Password is mandatory."),
       });
 
     return(

@@ -4,46 +4,24 @@ import { ErrorMessage, Formik, Form, Field } from "formik";
 import Axios from "axios";
 import React from "react";
 import { useState } from "react";
+import crypto from "crypto";
 
 function Login() {
     
+    const [g1_str, setg1_str] = useState("");
+    var v =0;
 
-    
-    const [g1_str, setg1_str] = useState();
-    const [v, setV] = useState();
-
-
-
-    const HandleLogin = async (values) => {
-
-        Axios.post("http://localhost:3001/g1", {
-            email: values.email
-          }).then((response) => {
-             setg1_str(response.data[0].g1);
-            
-          }); 
-    
-        /*var api_url = `http://localhost:3001/t`;
-        var response = await fetch(api_url);
-        var json = await response.json();
-        var t = json;*/
-        
-        var gen_per = [];
+    var g1_stored = new Array();
+    var gen_per = [];
+    var r = [];
+    var arrayOfPermutation = [];
 
 
+function fetch_gn(values){
 
-    gen_per = Array.from({length: 79}, () => Math.floor(Math.random() * 79));
-            
-        
-
-        //console.log(gen_per);
- var g1_stored = new Array();
-g1_stored = g1_str.split(',');
-
-
-var GN = new Array() ;
+    var GN = new Array() ;
  for (let i = 0; i < Math.min(gen_per.length, g1_stored.length); i++) {
-    GN[i] = g1_stored[i] * gen_per[i];
+    GN[i] = g1_stored[i] * arrayOfPermutation[i];
  }
 
  function arrayToNumber(arr){
@@ -63,11 +41,80 @@ var GN = new Array() ;
         gn: GN_number
     
       }).then((response) => {
-         setV(response.data);
+        v =0;
       });
 
+} 
 
-    var r = [];
+function verify(values){
+
+    Axios.post("http://localhost:3001/verify", {
+        email: values.email,
+              v: v,
+              r: r,
+            }).then((response) => {
+                console.log(response.data.verdict);
+            
+            }); 
+
+}
+
+
+
+    const HandleLogin =  (values) => {
+
+
+        Axios.post("http://localhost:3001/g1", {
+            email: values.email
+          }).then((response) => {
+             setg1_str(response.data[0].g1);
+          });
+
+          var shasum = crypto.createHash('sha1').update(JSON.stringify(values.password)).digest('hex');
+
+          
+          // SHA to HexaDecimal
+          function toHex(shasum) {
+            var result = '';
+            for (var i=0; i<shasum.length; i++) {
+              result += shasum.charCodeAt(i).toString(16);
+            }
+            return result;
+          }
+          
+          // stored hex here
+          var shahex = toHex(shasum);
+  
+          console.log(shahex);
+  
+           var permutation = new Array();
+          for(var i = 0;i<shahex.length-1;i++){
+              
+              permutation[i] = shahex[i] + "" + shahex[i+1];         
+  }
+  
+  // permuation pie
+  arrayOfPermutation = permutation.map(Number); 
+    
+        /*var api_url = `http://localhost:3001/t`;
+        var response = await fetch(api_url);
+        var json = await response.json();
+        var t = json;*/
+        
+
+
+
+    gen_per =  arrayOfPermutation;
+    
+                
+
+        //console.log(gen_per);
+ 
+g1_stored = g1_str.split(',');
+
+
+fetch_gn(values);
+
       if(v == 0 ){
 r = gen_per;
       }
@@ -80,35 +127,22 @@ else{
 
 }
 
- Axios.post("http://localhost:3001/verify", {
-    email: values.email,
-          v: v,
-          r: r,
-        }).then((response) => {
-            console.log(response.data.verdict);
-        
-        }); 
+verify(values);
+
+
        
-
-
-
-      /*  Axios.post("http://localhost:3001/login", {
-          email: values.email,
-          password: values.password,
-        }).then((response) => {
-          alert(response.data.msg);
-        }); */
       };
+
 
       const validationsLogin = yup.object().shape({
         email: yup
           .string()
-          .email("email inválido")
-          .required("O email é obrigatório"),
+          .email("invalid email.")
+          .required("Email is mandatory."),
         password: yup
           .string()
-          .min(8, "A senha deve ter pelo menos 8 caracteres")
-          .required("A senha é obrigatória"),
+          .min(8, "Password must be at least 8 characters long.")
+          .required("Password is mandatory."),
       });
 
     return(
@@ -116,9 +150,9 @@ else{
             <div className="container-sm mt-4 ps-0">
                 <div className="card bg-light">
                     <div className="card-body text-left">
-                        <h2 className="px-4">Authentication</h2>
-                        <h5 className="px-4">Place some text over here</h5>
-                        <h5 className="px-4">This login system is based on a zero knowledge proof (ZKP). A token is required for every login and is obtained by initiating ZKP.</h5>
+                        <h1 className="px-4">ZKP Authentication</h1>
+                        <h5 className="px-4">This is our final project for MA616 - Software Engineering Lab 2022.</h5>
+                        <h6 className="px-4">This login system is based on a zero knowledge proof (ZKP). Your password is not stored anywhere. You will be authenticated using magic of maths.</h6>
                     </div>
                 </div>
             </div>
@@ -155,14 +189,9 @@ else{
                 </button>
 
                 <div className="d-flex flex-row">
-                    <Link to="/zkp">
-                        <button className="button mt-0">
-                            Start ZKP
-                        </button>
-                    </Link>
 
                     <Link to="/signup">
-                        <button className="button ms-2 mt-0">
+                        <button className="button ms-10 mt-3">
                             Register
                         </button>
                     </Link>

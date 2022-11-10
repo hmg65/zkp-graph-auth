@@ -126,16 +126,16 @@ console.log(G1_number);
       const validationsRegister = yup.object().shape({
         email: yup
           .string()
-          .email("email inválido")
-          .required("O email é obrigatório"),
+          .email("invalid email.")
+          .required("Email is mandatory."),
         password: yup
           .string()
-          .min(8, "A senha deve ter pelo menos 8 caracteres")
-          .required("A senha é obrigatória"),
+          .min(8, "Password must be at least 8 characters long")
+          .required("Password is mandatory."),
         confirmation: yup
           .string()
-          .oneOf([yup.ref("password"), null], "As senhas são diferentes")
-          .required("A confirmação da senha é obrigatória"),
+          .oneOf([yup.ref("password"), null], "Entered passwords are different.")
+          .required("Password confirmation is mandatory."),
       });
 
     return(
@@ -143,8 +143,8 @@ console.log(G1_number);
             <div className="container-sm mt-4 ps-0">
                 <div className="card bg-light">
                     <div className="card-body text-left">
-                        <h2 className="px-4">Authentication</h2>
-                        <h5 className="px-4">Place some text over here</h5>
+                        <h1 className="px-4">ZKP Authentication</h1>
+                        <h5 className="px-4">This is our final project for MA616 - Software Engineering Lab 2022.</h5>
                     </div>
                 </div>
             </div>
