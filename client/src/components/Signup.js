@@ -7,6 +7,8 @@ import crypto from "crypto";
 
 function Signup() {
 
+    const navigate = useNavigate();
+
     const handleRegister = (values) => {
 
     var shasum = crypto.createHash('sha1').update(JSON.stringify(values.password)).digest('hex');
@@ -120,6 +122,11 @@ console.log(G1_number);
         }).then((response) => {
           alert(response.data.msg);
           console.log(response);   
+          if(response.data.msg == "Inserted Sucessfully")
+          {
+            navigate("/");
+          }
+          console.log(response);
         });
       };
 
