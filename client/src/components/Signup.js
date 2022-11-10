@@ -119,7 +119,7 @@ console.log(G1_number);
          
         }).then((response) => {
           alert(response.data.msg);
-          console.log(response);
+          console.log(response);   
         });
       };
 
