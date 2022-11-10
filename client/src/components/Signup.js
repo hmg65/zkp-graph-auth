@@ -121,6 +121,7 @@ console.log(G1_number);
          
         }).then((response) => {
           alert(response.data.msg);
+          console.log(response);   
           if(response.data.msg == "Inserted Sucessfully")
           {
             navigate("/");
